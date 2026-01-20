@@ -41,12 +41,13 @@ waiting:
 
 # Vote Links (Displayed via /vote)
 vote-links:
-  - id: "link1"
-    name: "PlanetMinecraft"
-    url: "https://www.planetminecraft.com/server/example/vote/"
-  - id: "link2"
-    name: "Minecraft-MP"
-    url: "https://minecraft-mp.com/server/12345/vote/"
+  broadcast:
+    enabled: true
+    message: "<green>Player <white>%player%</white> has voted on <aqua>%service%</aqua>! <yellow>Want to vote too? Use <click:run_command:'/vote'><underlined>/vote</underlined></click></yellow>"
+  links:
+    - id: "link1"
+      name: "PlanetMinecraft"
+      url: "https://example.com/vote"
 
 # Messages
 messages:

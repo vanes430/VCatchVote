@@ -24,7 +24,17 @@ public class VoteManager {
     }
 
     public void handleVote(String username, String service) {
+        // 1. Broadcast to everyone (regardless of player online status)
+        if (plugin.getConfig().getBoolean("vote-links.broadcast.enabled")) {
+            String broadcastMsg = plugin.getConfig().getString("vote-links.broadcast.message", "")
+                    .replace("%player%", username)
+                    .replace("%service%", service);
+            plugin.getMessageUtils().broadcast(broadcastMsg);
+        }
+
         OfflinePlayer player = Bukkit.getOfflinePlayer(username);
+        
+        // 2. Check Waiting System for offline players
         if (plugin.getConfig().getBoolean("waiting.enabled") && !player.isOnline()) {
             plugin.getWaitingManager().addVote(username, service);
             if (plugin.getConfig().getBoolean("debug")) {
@@ -32,6 +42,8 @@ public class VoteManager {
             }
             return;
         }
+
+        // --- BELOW LOGIC ONLY RUNS IF PLAYER IS ONLINE OR PROCESSING WAITING LIST ---
 
         if (plugin.getConfig().getBoolean("debug")) {
             plugin.getLogger().info("[LOG] Vote: " + username + " | Service: " + service);
@@ -55,12 +67,13 @@ public class VoteManager {
             });
         }
 
+        // Message to the online player (or processed from waiting)
         String msg = plugin.getConfig().getString("messages.vote-received", "")
                 .replace("%player%", username)
                 .replace("%service%", service)
                 .replace("%current%", String.valueOf(currentVotes))
                 .replace("%target%", String.valueOf(voteTarget));
-
+        
         plugin.getMessageUtils().broadcast(msg);
 
         if (currentVotes >= voteTarget) {
