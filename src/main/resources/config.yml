@@ -1,0 +1,60 @@
+# VCatchVote Configuration
+debug: true
+
+# MiniMessage is supported for all messages (e.g., <gradient:red:blue>Text</gradient> or <red>Text</red>)
+# Legacy color codes (&) are also supported if handled via Adventure.
+
+# Vote Party Settings
+vote-party:
+  enabled: true
+  target: 50
+  # Commands to run when the party starts
+  rewards:
+    # Per-player rewards (runs for every online player)
+    per-player:
+      enabled: true
+      delay-ticks: 10
+      commands:
+        - "give %player% diamond 1"
+    # Global rewards (runs only once)
+    global:
+      enabled: true
+      commands:
+        - "broadcast &a&lVOTE PARTY STARTED!"
+
+# Normal Rewards (Runs on every vote)
+normal-rewards:
+  enabled: true
+  commands:
+    - "give %player% emerald 1"
+    - "say %player% just voted!"
+
+# Waiting System (Offline Voting)
+waiting:
+  enabled: true
+  # Options: JSON (Saved to file), MEMORY (Reset on restart)
+  storage: "JSON"
+  # Delay after a player joins before processing their offline votes (in ticks)
+  join-delay-ticks: 60
+  # Automatically clear the waiting list every X minutes (0 to disable)
+  auto-clear-minutes: 60
+
+# Vote Links (Displayed via /vote)
+vote-links:
+  - id: "link1"
+    name: "PlanetMinecraft"
+    url: "https://www.planetminecraft.com/server/example/vote/"
+  - id: "link2"
+    name: "Minecraft-MP"
+    url: "https://minecraft-mp.com/server/12345/vote/"
+
+# Messages
+messages:
+  prefix: "<gray>[<blue>VCatchVote</blue>] </gray>"
+  vote-received: "<green>Thanks for voting on <white>%service%</white>! <gray>(<gold>%current%</gold>/<gold>%target%</gold> to Vote Party)"
+  vote-party-reached: "<green>Vote Party goal reached! Starting rewards..."
+  no-permission: "<red>You do not have permission to execute this command."
+  reload: "<green>Configuration reloaded successfully."
+  fake-vote: "<yellow>Simulated vote for %player% on %service%."
+  vote-list-header: "<blue>==== <white>Vote Links</white> ====</blue>"
+  vote-list-format: "<gray>- <yellow>%name%</yellow>: <click:open_url:'%url%'><underlined><aqua>%url%</aqua></underlined></click></gray>"

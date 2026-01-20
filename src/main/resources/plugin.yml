@@ -1,0 +1,18 @@
+name: VCatchVote
+version: ${project.version}
+main: github.vanes430.vcatchvote.VCatchVote
+api-version: 1.20
+description: A lightweight, modern, and high-performance vote listener plugin for Paper and Folia servers.
+author: vanes430
+website: https://github.com/vanes430
+folia-supported: true
+softdepend:
+  - VotifierPlus
+  - NuVotifier
+  - PlaceholderAPI
+commands:
+  vcatchvote:
+    description: Main command for VCatchVote
+    permission: vcatchvote.admin
+  vote:
+    description: Show vote links
