@@ -1,5 +1,5 @@
 # VCatchVote Configuration
-debug: true
+debug: false
 
 # MiniMessage is supported for all messages (e.g., <gradient:red:blue>Text</gradient> or <red>Text</red>)
 # Legacy color codes (&) are also supported if handled via Adventure.
