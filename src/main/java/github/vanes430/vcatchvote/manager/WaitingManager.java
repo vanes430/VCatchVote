@@ -107,12 +107,17 @@ public class WaitingManager {
         if (!isJsonMode()) return;
 
         plugin.getServer().getAsyncScheduler().runNow(plugin, (task) -> {
-            try (FileWriter writer = new FileWriter(file)) {
-                gson.toJson(waitingVotes, writer);
-            } catch (IOException e) {
-                plugin.getLogger().severe("Could not save waiting.json: " + e.getMessage());
-            }
+            saveSync();
         });
+    }
+
+    public void saveSync() {
+        if (!isJsonMode()) return;
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(waitingVotes, writer);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not save waiting.json: " + e.getMessage());
+        }
     }
 
     public Map<String, List<WaitingVote>> getWaitingVotes() {

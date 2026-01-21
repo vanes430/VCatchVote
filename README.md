@@ -32,6 +32,17 @@ To ensure stability and performance, this plugin requires:
 
 ---
 
+## 🔨 Building from Source
+
+To build the project locally, you will need **JDK 21** and **Maven**.
+
+```bash
+git clone https://github.com/vanes430/VCatchVote.git
+cd VCatchVote
+mvn clean install
+```
+The compiled jar will be located in the `target/` directory.
+
 ## 📥 Installation
 
 1.  **Download** the latest `VCatchVote-1.0.0.jar`.

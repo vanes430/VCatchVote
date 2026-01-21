@@ -25,10 +25,10 @@ jobs:
 
       - name: Get Version from POM
         id: get_version
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+        run: echo "VERSION=$(mvn -B help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: Build with Maven
-        run: mvn clean package
+        run: mvn -B clean install
 
       - name: Automatic Release
         uses: marvinpinto/action-automatic-releases@latest

@@ -45,12 +45,16 @@ public class DataManager {
     public void save() {
         AsyncScheduler scheduler = plugin.getServer().getAsyncScheduler();
         scheduler.runNow(plugin, task -> {
-            try (FileWriter writer = new FileWriter(file)) {
-                gson.toJson(data, writer);
-            } catch (IOException e) {
-                plugin.getLogger().severe("Could not save data.json: " + e.getMessage());
-            }
+            saveSync();
         });
+    }
+
+    public void saveSync() {
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(data, writer);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not save data.json: " + e.getMessage());
+        }
     }
 
     public int getCurrentVotes() {

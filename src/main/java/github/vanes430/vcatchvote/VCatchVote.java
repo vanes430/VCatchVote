@@ -82,13 +82,13 @@ public class VCatchVote extends JavaPlugin {
     @Override
     public void onDisable() {
         if (waitingManager != null) {
-            waitingManager.save();
+            waitingManager.saveSync();
         }
         if (databaseManager != null) {
             databaseManager.close();
         }
         if (dataManager != null) {
-            dataManager.save();
+            dataManager.saveSync();
         }
         getLogger().info("VCatchVote has been disabled!");
     }
