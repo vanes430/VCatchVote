@@ -71,7 +71,27 @@ public class DataManager {
         save();
     }
 
+    public long getLastWeeklyReset() {
+        return data.lastWeeklyReset;
+    }
+
+    public void setLastWeeklyReset(long lastWeeklyReset) {
+        this.data.lastWeeklyReset = lastWeeklyReset;
+        save();
+    }
+
+    public long getLastMonthlyReset() {
+        return data.lastMonthlyReset;
+    }
+
+    public void setLastMonthlyReset(long lastMonthlyReset) {
+        this.data.lastMonthlyReset = lastMonthlyReset;
+        save();
+    }
+
     private static class Data {
         int currentVotes = 0;
+        long lastWeeklyReset = 0;
+        long lastMonthlyReset = 0;
     }
 }

@@ -47,17 +47,34 @@ public class VoteExpansion extends PlaceholderExpansion {
             return String.valueOf(plugin.getVoteManager().getVoteTarget() - plugin.getVoteManager().getCurrentVotes());
         }
 
-        // %vcatchvote_player_votes% - The player viewing the placeholder
+        // %vcatchvote_player_votes%
         if (params.equalsIgnoreCase("player_votes")) {
             if (player == null) return "0";
             return String.valueOf(plugin.getDatabaseManager().getVotes(player));
         }
 
-        // %vcatchvote_player_votes_<name>% - Specific player votes
+        // %vcatchvote_votes_weekly%
+        if (params.equalsIgnoreCase("votes_weekly")) {
+            if (player == null) return "0";
+            return String.valueOf(plugin.getDatabaseManager().getWeeklyVotes(player));
+        }
+
+        // %vcatchvote_votes_monthly%
+        if (params.equalsIgnoreCase("votes_monthly")) {
+            if (player == null) return "0";
+            return String.valueOf(plugin.getDatabaseManager().getMonthlyVotes(player));
+        }
+        
+        // %vcatchvote_streak%
+        if (params.equalsIgnoreCase("streak")) {
+            if (player == null) return "0";
+            return String.valueOf(plugin.getDatabaseManager().getStreak(player));
+        }
+
+        // %vcatchvote_player_votes_<name>%
         if (params.startsWith("player_votes_")) {
             String targetName = params.substring("player_votes_".length());
             OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
-            // Warning: This could be slow if not cached and DB is large, but our manager caches hits
             return String.valueOf(plugin.getDatabaseManager().getVotes(target));
         }
 

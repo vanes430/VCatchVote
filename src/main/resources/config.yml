@@ -25,9 +25,16 @@ vote-party:
 # Normal Rewards (Runs on every vote)
 normal-rewards:
   enabled: true
-  commands:
-    - "give %player% emerald 1"
-    - "say %player% just voted!"
+  # Rewards pool (Independent probability check for each item)
+  rewards:
+    - chance: 100.0 # Guaranteed
+      commands:
+        - "give %player% emerald 1"
+        - "say %player% just voted!"
+    - chance: 10.0 # 10% Chance Bonus
+      commands:
+        - "give %player% diamond 1"
+        - "msg %player% <green>Lucky! You got a bonus diamond!"
 
 # Waiting System (Offline Voting)
 waiting:
@@ -39,23 +46,61 @@ waiting:
   # Automatically clear the waiting list every X minutes (0 to disable)
   auto-clear-minutes: 60
 
-# Vote Links (Displayed via /vote)
-vote-links:
-  broadcast:
-    enabled: true
-    message: "<green>Player <white>%player%</white> has voted on <aqua>%service%</aqua>! <yellow>Want to vote too? Use <click:run_command:'/vote'><underlined>/vote</underlined></click></yellow>"
+# Discord Webhook Integration
+discord-webhook:
+  enabled: true
+  url: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
+  username: "VCatchVote"
+  avatar-url: "https://i.imgur.com/example.png"
+  messages:
+    vote: "**%player%** just voted on **%service%**! (Total: %votes%)"
+    party-start: ":tada: **VOTE PARTY STARTED!** :tada:"
+
+# Vote Reminder (In-Game)
+vote-reminder:
+  enabled: true
+  check-interval-minutes: 5
+  remind-every-minutes: 1440 # 24 Hours
+  message: "<yellow>You haven't voted in 24 hours! Type <click:run_command:'/vote'><aqua>/vote</aqua></click> to support the server and get rewards!"
+
+# Vote Streak Rewards
+vote-streak:
+  enabled: true
+  # Streak rewards (Day: Commands)
+  rewards:
+    3:
+      - "give %player% iron_ingot 5"
+      - "msg %player% <green>You reached a 3-day vote streak!"
+    7:
+      - "give %player% diamond 1"
+      - "broadcast <gold>%player% reached a 7-day vote streak!"
+
+# Vote Links Settings
+vote-links-settings:
   links:
-    - id: "link1"
-      name: "PlanetMinecraft"
+    - name: "PlanetMinecraft"
       url: "https://example.com/vote"
+
+# Vote List Display (Used in /vote)
+vote-list-display:
+  header: "<blue>==== <white>Vote Links</white> ====</blue>"
+  format: "<gray>- <yellow>%name%</yellow>: <click:open_url:'%url%'><underlined><aqua>%domain%</aqua></underlined></click></gray>"
 
 # Messages
 messages:
   prefix: "<gray>[<blue>VCatchVote</blue>] </gray>"
-  vote-received: "<green>Thanks for voting on <white>%service%</white>! <gray>(<gold>%current%</gold>/<gold>%target%</gold> to Vote Party)"
+  
+  # Sent to all players when someone votes
+  broadcast:
+    enabled: true
+    message: "<green>Player <white>%player%</white> has voted on <aqua>%service%</aqua>! <gray>(<gold>%current%</gold>/<gold>%target%</gold>) <yellow>Want to vote too? Use <click:run_command:'/vote'><underlined>/vote</underlined></click></yellow>"
+  
+  # Sent only to the player who voted
+  private:
+    enabled: true
+    message: "<green>Thanks for voting on <white>%service%</white>! Your support helps us grow."
+
   vote-party-reached: "<green>Vote Party goal reached! Starting rewards..."
   no-permission: "<red>You do not have permission to execute this command."
   reload: "<green>Configuration reloaded successfully."
   fake-vote: "<yellow>Simulated vote for %player% on %service%."
-  vote-list-header: "<blue>==== <white>Vote Links</white> ====</blue>"
-  vote-list-format: "<gray>- <yellow>%name%</yellow>: <click:open_url:'%url%'><underlined><aqua>%url%</aqua></underlined></click></gray>"

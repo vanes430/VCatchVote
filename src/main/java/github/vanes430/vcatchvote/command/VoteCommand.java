@@ -25,21 +25,22 @@ public class VoteCommand implements CommandExecutor {
     }
 
     private void sendVoteLinks(CommandSender sender) {
-        sender.sendMessage(plugin.getMessageUtils().parseWithoutPrefix(plugin.getConfig().getString("messages.vote-list-header", "")));
+        sender.sendMessage(plugin.getMessageUtils().parseWithoutPrefix(plugin.getConfig().getString("vote-list-display.header", "")));
         
-        List<?> links = plugin.getConfig().getList("vote-links");
-        String format = plugin.getConfig().getString("messages.vote-list-format", "");
+        List<Map<?, ?>> links = plugin.getConfig().getMapList("vote-links-settings.links");
+        String format = plugin.getConfig().getString("vote-list-display.format", "");
         
         if (links != null) {
-            for (Object obj : links) {
-                if (obj instanceof Map) {
-                    Map<?, ?> link = (Map<?, ?>) obj;
-                    String name = String.valueOf(link.get("name"));
-                    String url = String.valueOf(link.get("url"));
-                    
-                    String formatted = format.replace("%name%", name).replace("%url%", url);
-                    sender.sendMessage(plugin.getMessageUtils().parseWithoutPrefix(formatted));
-                }
+            for (Map<?, ?> link : links) {
+                String name = String.valueOf(link.get("name"));
+                String url = String.valueOf(link.get("url"));
+                String domain = url.replace("https://", "").replace("http://", "").split("/")[0];
+                
+                String formatted = format
+                        .replace("%name%", name)
+                        .replace("%url%", url)
+                        .replace("%domain%", domain);
+                sender.sendMessage(plugin.getMessageUtils().parseWithoutPrefix(formatted));
             }
         }
     }

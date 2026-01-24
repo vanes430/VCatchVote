@@ -22,13 +22,17 @@ To ensure stability and performance, this plugin requires:
 *   **⚡ Native Threading:** Fully supports Folia's region-based multithreading using specific schedulers (Entity, Global, Async).
 *   **🎉 Intelligent Vote Party:** Trigger global events after reaching a vote goal. 
     *   *Anti-Lag:* Distributes player rewards sequentially with a configurable tick delay.
-*   **📊 Persistent Stats:** Tracks total votes per player using a dedicated **SQLite** database with asynchronous writes.
+*   **📊 Persistent Stats:** Tracks total, weekly, and monthly votes per player using a dedicated **SQLite** database with asynchronous writes.
+*   **🔥 Vote Streak:** Rewards players for voting consecutive days. Includes a placeholder `%vcatchvote_streak%`.
+*   **📅 Auto-Reset System:** Weekly stats reset every Monday at 00:00, and Monthly stats reset on the 1st of every month at 00:00.
 *   **💤 Offline Vote Catching:** Queues rewards for offline players and delivers them upon join (JSON or Memory storage).
 *   **🎁 Multi-Tier Rewards:**
-    *   *Normal Rewards:* Executed instantly on every vote.
+    *   *Chance Rewards:* Configure multiple rewards with independent probabilities (e.g., 100% money + 5% rare key).
     *   *Party Rewards:* Global and per-player rewards once the goal is met.
+*   **🤖 Discord Integration:** Built-in Webhook support to send vote notifications and party alerts to your Discord server.
+*   **⏰ Vote Reminders:** Automatically reminds players to vote if they haven't voted in the last 24 hours (configurable).
 *   **🎨 MiniMessage & Adventure:** Support for modern RGB, gradients, and hover/click events in all messages and vote links.
-*   **🔗 Clickable Vote Links:** Easy `/vote` command for players to access voting sites.
+*   **🔗 Clickable Vote Links:** Revamped `/vote` command with clean display and automatic domain extraction.
 
 ---
 
@@ -55,9 +59,35 @@ The compiled jar will be located in the `target/` directory.
 
 ## ⚙️ Configuration Preview
 
-The `config.yml` is designed to be intuitive and safe:
+The `config.yml` is organized into clean, dedicated sections:
 
 ```yaml
+# Vote Links Settings (Input data)
+vote-links-settings:
+  links:
+    - name: "PlanetMinecraft"
+      url: "https://www.planetminecraft.com/server/example/vote/"
+
+# Vote List Display (Used in /vote command)
+# Placeholders: %name%, %url%, %domain%
+vote-list-display:
+  header: "<blue>==== <white>Vote Links</white> ====</blue>"
+  format: "<gray>- <yellow>%name%</yellow>: <click:open_url:'%url%'><underlined><aqua>%domain%</aqua></underlined></click></gray>"
+
+# Messages Settings
+messages:
+  prefix: "<gray>[<blue>VCatchVote</blue>] </gray>"
+  
+  # Sent to everyone
+  broadcast:
+    enabled: true
+    message: "<green>Player %player% voted! <gray>(%current%/%target%)"
+
+  # Sent to the voter
+  private:
+    enabled: true
+    message: "<green>Thanks for voting on %service%!"
+
 # Vote Party Settings
 vote-party:
   enabled: true
@@ -65,24 +95,26 @@ vote-party:
   rewards:
     per-player:
       enabled: true
-      delay-ticks: 10 # Prevents lag spikes on large servers
+      delay-ticks: 10 
       commands: ["give %player% diamond 1"]
-    global:
-      enabled: true
-      commands: ["broadcast <gold>Vote Party Started!"]
 
-# Normal Rewards (Runs on every single vote)
+# Chance-based Rewards
 normal-rewards:
   enabled: true
-  commands:
-    - "give %player% emerald 1"
-    - "say %player% just voted!"
+  rewards:
+    - chance: 100.0 # Always give this
+      commands:
+        - "give %player% emerald 1"
+    - chance: 5.0 # Rare bonus
+      commands:
+        - "give %player% diamond_block 1"
 
-# Offline Support
-waiting:
+# Vote Streak Rewards
+vote-streak:
   enabled: true
-  storage: "JSON" # JSON (persistent) or MEMORY (resets on restart)
-  join-delay-ticks: 60 # Wait for player to fully load before giving rewards
+  rewards:
+    3:
+      - "msg %player% <green>You reached a 3-day streak!"
 ```
 
 ---
@@ -109,7 +141,10 @@ Requires **PlaceholderAPI**.
 *   `%vcatchvote_target%` - Vote Party goal.
 *   `%vcatchvote_needed%` - Votes remaining until the party.
 *   `%vcatchvote_player_votes%` - Total votes of the player viewing.
+*   `%vcatchvote_votes_weekly%` - Weekly votes of the player viewing.
+*   `%vcatchvote_votes_monthly%` - Monthly votes of the player viewing.
 *   `%vcatchvote_player_votes_<player>%` - Total votes of a specific player.
+*   `%vcatchvote_streak%` - Current daily vote streak of the player.
 
 ---
 

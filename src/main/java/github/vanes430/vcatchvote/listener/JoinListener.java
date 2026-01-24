@@ -15,6 +15,12 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        // Preload database data asynchronously
+        plugin.getServer().getAsyncScheduler().runNow(plugin, task -> {
+             plugin.getDatabaseManager().getLastVote(event.getPlayer());
+             plugin.getDatabaseManager().getVotes(event.getPlayer());
+        });
+
         if (!plugin.getConfig().getBoolean("waiting.enabled")) return;
 
         long delay = plugin.getConfig().getLong("waiting.join-delay-ticks", 60);
